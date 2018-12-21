@@ -49,11 +49,11 @@ class BoardState:
                 if i == 3:
                     # Place Masters
                     self.board[i][0] = GamePiece('Master','red',(i,0))
-                    self.board[i][0] = GamePiece('Master','blue',(i,4))
+                    self.board[i][4] = GamePiece('Master','blue',(i,4))
                 else:
                     # Place students
                     self.board[i][0] = GamePiece('Student','red',(i,0))
-                    self.board[i][0] = GamePiece('Student','blue',(i,4))
+                    self.board[i][4] = GamePiece('Student','blue',(i,4))
 
     # Precond:
     #   loc is a pair of integers indicating a position vector.
@@ -64,23 +64,23 @@ class BoardState:
         return (loc[0] >= 0 and loc[0] < 5) and (loc[1] >= 0 and loc[1] < 5)
 
     # Precond:
-    #   from is the location where the piece starts.
+    #   start is the location where the piece starts.
     #   to is the location where the piece moves to.
 
     # Postcond:
     #   Returns true if the move is performed.
     #   Returns false if the move is illegal.
-    def move(self, from, to):
-        if not self.inBounds(from) or not self.inBounds(to):
+    def move(self, start, to):
+        if not self.inBounds(start) or not self.inBounds(to):
             return False
-        if self.board[from[0],from[1]] is None:
+        if self.board[start[0],start[1]] is None:
             return False
-        if self.board[from[0],from[1]].color == self.board[to[0],to[1]].color:
+        if self.board[start[0],start[1]].color == self.board[to[0],to[1]].color:
             return False
         self.board[to[0],to[1]] = None
-        self.board[to[0],to[1]] = self.board[from[0],from[1]]
+        self.board[to[0],to[1]] = self.board[start[0],start[1]]
         self.board[to[0],to[1]].location = to
-        self.board[from[0],from[1]] = None
+        self.board[start[0],start[1]] = None
         return True
 
     # Precond:
