@@ -21,10 +21,11 @@ from onitama.move import *
 #       2: Intermediate
 #
 # Postcond:
-#   Builds a mx-min tree of the given ply-depth and uses that to decide the next
-#   move.
+#   Builds a max-min tree of the given ply-depth and uses that to decide the
+#   next move.
 def decide(board, cards, depth):
-    return None
+    root = TreeNode(board, cards, True, [], depth)
+    return root.decision
 
 
 # Defines a class for max-min tree nodes
@@ -62,12 +63,12 @@ class TreeNode:
     #   evaluation metric.
     #   Otherwise all children are generated and used to determine final eval.
     def eval(self):
+        winner = self.board.winner()
+        if winner == 'red':
+            return 1.0
+        if winner == 'blue':
+            return 0.0
         if depth == 0:
-            winner = self.board.winner()
-            if winner == 'red':
-                return 1.0
-            if winner == 'blue':
-                return 0.0
             pieces = self.board.pieces()
             redCount = 0
             distance = 0.0
@@ -129,7 +130,7 @@ class TreeNode:
                         end = (xCoord,yCoord)
                         nextState = BoardState(self.board)
                         if nextState.move(start,end):
-                            child = TreeNode(nextState, nextCards, !self.turn, [start,end], self.depth-1)
+                            child = TreeNode(nextState, nextCards, !self.turn, [start,end,cards[i].name], self.depth-1)
                             children.append(child)
             return 0
             if self.turn:
@@ -137,11 +138,17 @@ class TreeNode:
                 for i in range(1,len(children)):
                     if children[i].score > max:
                         max = children[i].score
+                        self.decision = children[i].move
+                children = None
+                del children
                 return max
             else:
                 min = children[0].score
                 for i in range(1,len(children)):
                     if children[i].score < min:
                         min = children[i].score
+                        self.decision = children[i].move
+                children = None
+                del children
                 return min
         return -1 # Indicates odd execution

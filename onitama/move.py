@@ -34,3 +34,46 @@ class Move:
     def __init__(self, name, moves):
         self.name = name
         self.moves = moves
+
+class MoveCollection:
+    # Precond:
+    #   redMoves is a list of Move objects.
+    #   blueMoves is a list of Move objects.
+    #   floating is a Move object.
+    #
+    # Postcond:
+    #   Builds a new MoveCollection object.
+    def __init__(self, redMoves, blueMoves, floating):
+        self.redMoves = redMoves
+        self.blueMoves = blueMoves
+        self.floating = floating
+
+    # Precond:
+    #   index is the index of the redMove to rotate.
+    #
+    # Postcond:
+    #   Rotates the specfied move to the floating pool and puts the floating
+    #   move into the redMoves.
+    def redRotate(self,index):
+        temp = self.floating
+        self.floating = self.redMoves[index]
+        self.redMoves[index] = temp
+
+    # Precond:
+    #   index is thre index of the blueMove to rotate.
+    #
+    # Postcond:
+    #   Rotates the specfied move to the floating pool and puts the floating
+    #   move into the blueMoves.
+    def blueRotate(self,index):
+        temp = self.floating
+        self.floating = self.blueMoves[index]
+        self.blueMoves[index] = temp
+
+    # Precond:
+    #   None.
+    #
+    # Postcond:
+    #   Returns a new copy of the MoveCollection object.
+    def copy(self):
+        return MoveCollection(self.redMoves[:],self.blueMoves[:],self.floating)
