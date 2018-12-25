@@ -17,7 +17,16 @@ class GamePiece:
     def __init__(self, piece, color, location):
         self.piece = piece
         self.color = color
-        self.locaction = location
+        self.location = location
+
+    # Precond:
+    #   None.
+    #
+    # Postcond:
+    #   Returns a string representation of the piece.
+    def __str__(self):
+        loc = "(" + str(self.location[0]) + "," + str(self.location[1]) + ")"
+        return "[" + str(self.color) + "]" + str(self.piece) + ": " + loc
 
     # Precond:
     #   None.

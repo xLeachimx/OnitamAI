@@ -57,8 +57,42 @@ def main(args):
     while board.winner() == None:
         if turn:
             print("Red Move:")
-            print(decide(board,cards,depth))
+            move = decide(board,cards,depth)
+            print("From: ("+str(move[0][0])+ ","+str(move[0][1])+")")
+            print("To: ("+str(move[1][0])+","+ str(move[1][1])+")")
+            cards.redRotate(move[2])
+            board.move(move[0],move[1])
         else:
+            print("Blue Move:")
+            # Choose card
+            count = 0
+            for move in cards.blueMoves:
+                print(str(count) + ". " + str(move))
+                count += 1
+            choice = -1
+            while choice < 0 or choice >= count:
+                choice = input('Card Used: ')
+            # Choose Move vector
+            count = 0
+            for move in cards.blueMoves[choice].moves:
+                print(str(count) + ". " + str(-move[0]) + ',' + str(-move[1]))
+                count += 1
+            choice2 = -1
+            while choice2 < 0 or choice2 >= count:
+                choice2 = input('Move Used: ')
+            # Choose piece
+            count = 0
+            for piece in board.pieces:
+                print(str(count) + ". " + )
+                count += 1
+            choice3 = -1
+            while choice3 < 0 or choice3 >= count:
+                choice3 = input('Piece Used: ')
+            move = cards.blueMoves[choice].moves[choice2]
+            to = board.pieces[choice3].location
+            to = (to[0]+move[0],to[1]+move[1])
+            board.move(board.pieces[choice3].location,to)
+        turn = !turn
     return 0
 
 main(sys.argv[1:len(sys.argv)])

@@ -15,10 +15,7 @@ from onitama.move import *
 # Precond:
 #   board is the current board state.
 #   depth is the number of plies to consider.
-#   cards is a list of the current cards:
-#       0: Cards for red
-#       1: Cards for blue
-#       2: Intermediate
+#   cards is a valid MoveCollection object
 #
 # Postcond:
 #   Builds a max-min tree of the given ply-depth and uses that to decide the
@@ -32,10 +29,7 @@ def decide(board, cards, depth):
 class TreeNode:
     # Precond:
     #   board is a valid BoardState object
-    #   cards is a list of the current cards:
-    #       0: Cards for red
-    #       1: Cards for blue
-    #       2: Intermediate
+    #   cards is a valid MoveCollection object
     #   turn indicates whether to maximize or minimize value:
     #       True: max
     #       False: min
@@ -86,29 +80,16 @@ class TreeNode:
             children = []
             cards = []
             if self.turn:
-                cards = self.cards[0]
+                cards = self.cards.redMoves
             else:
-                cards = self.cards[1]
+                cards = self.cards.blueMoves
             # Select card.
             for i in range(2):
+                nextCards = cards.copy
                 if self.turn:
-                    nextCards.append([])
-                    for j in range(len(cards[0])):
-                        if j == i:
-                            continue
-                        nextCards[0].append(self.cards[0][j])
-                    nextCards[0].extend(self.cards[2])
-                    nextCards.append(self.cards[1])
-                    nextCards.append([self.cards[0][i]])
+                    nextCards.redRotate(i)
                 else:
-                    nextCards.append(self.cards[0])
-                    nextCards.append([])
-                    for j in range(len(cards[1])):
-                        if j == i:
-                            continue
-                        nextCards[1].append(self.cards[1][j])
-                    nextCards[1].extend(self.cards[2])
-                    nextCards.append([self.cards[1][i]])
+                    nextCards.blueRotate(i)
                 # Select move from cards.
                 for move in cards[i].moves:
                     # Select the Piece.
@@ -130,9 +111,8 @@ class TreeNode:
                         end = (xCoord,yCoord)
                         nextState = BoardState(self.board)
                         if nextState.move(start,end):
-                            child = TreeNode(nextState, nextCards, !self.turn, [start,end,cards[i].name], self.depth-1)
+                            child = TreeNode(nextState, nextCards, !self.turn, [start,end,i], self.depth-1)
                             children.append(child)
-            return 0
             if self.turn:
                 max = children[0].score
                 for i in range(1,len(children)):

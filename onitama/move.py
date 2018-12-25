@@ -35,6 +35,14 @@ class Move:
         self.name = name
         self.moves = moves
 
+    # Precond:
+    #   None.
+    #
+    # Postcond:
+    #   Returns proper string representation
+    def __str__(self):
+        return self.name
+
 class MoveCollection:
     # Precond:
     #   redMoves is a list of Move objects.
