@@ -107,6 +107,7 @@ def main(args):
             while choice3 < 0 or choice3 >= count:
                 choice3 = input('Piece Used: ')
             move = cards.blueMoves[choice].moves[choice2]
+            cards.blueRotate[choice]
             to = board.pieces()[choice3].location
             to = (to[0]+move[0],to[1]+move[1])
             board.move(board.pieces()[choice3].location,to)
