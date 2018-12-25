@@ -82,14 +82,14 @@ class BoardState:
     def move(self, start, to):
         if not self.inBounds(start) or not self.inBounds(to):
             return False
-        if self.board[start[0],start[1]] is None:
+        if self.board[start[0]][start[1]] is None:
             return False
-        if self.board[start[0],start[1]].color == self.board[to[0],to[1]].color:
+        if self.board[to[0]][to[1]] is not None and self.board[start[0]][start[1]].color == self.board[to[0]][to[1]].color:
             return False
-        self.board[to[0],to[1]] = None
-        self.board[to[0],to[1]] = self.board[start[0],start[1]]
-        self.board[to[0],to[1]].location = to
-        self.board[start[0],start[1]] = None
+        self.board[to[0]][to[1]] = None
+        self.board[to[0]][to[1]] = self.board[start[0]][start[1]]
+        self.board[to[0]][to[1]].location = to
+        self.board[start[0]][start[1]] = None
         return True
 
     # Precond:
@@ -114,15 +114,15 @@ class BoardState:
     def winner(self):
         redMaster = None
         blueMaster = None
-        for piece in self.pieces:
+        for piece in self.pieces():
             if piece.piece == 'Master':
                 if piece.color == 'red':
                     redMaster = piece
-                else piece.color == 'blue':
+                elif piece.color == 'blue':
                     blueMaster = piece
         if redMaster is None:
             return 'blue'
-        if blueMaster if None:
+        if blueMaster is None:
             return 'red'
         if redMaster.location[0] == 3 and redMaster.location[1] == 4:
             return 'red'

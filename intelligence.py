@@ -11,7 +11,7 @@
 
 from onitama.board import *
 from onitama.move import *
-
+import math
 # Precond:
 #   board is the current board state.
 #   depth is the number of plies to consider.
@@ -62,7 +62,7 @@ class TreeNode:
             return 1.0
         if winner == 'blue':
             return 0.0
-        if depth == 0:
+        if self.depth == 0:
             pieces = self.board.pieces()
             redCount = 0
             distance = 0.0
@@ -72,7 +72,7 @@ class TreeNode:
                     if piece.piece == 'Master':
                         xcomp = (piece.location[0]-3.0)**2
                         ycomp = (piece.location[1]-4.0)**2
-                        distance = Math.sqrt(xcomp+ycomp)
+                        distance = math.sqrt(xcomp+ycomp)
             distance = 1.0/(distance+1.0)
             redCount = redCount/(float(len(pieces)))
             return (distance+redCount)/2.0
@@ -85,7 +85,7 @@ class TreeNode:
                 cards = self.cards.blueMoves
             # Select card.
             for i in range(2):
-                nextCards = cards.copy
+                nextCards = self.cards.copy()
                 if self.turn:
                     nextCards.redRotate(i)
                 else:
@@ -93,7 +93,7 @@ class TreeNode:
                 # Select move from cards.
                 for move in cards[i].moves:
                     # Select the Piece.
-                    for piece in self.pieces.pieces():
+                    for piece in self.board.pieces():
                         # Ensure proper turn order.
                         if piece.color == 'red' and not self.turn:
                             continue
@@ -111,7 +111,7 @@ class TreeNode:
                         end = (xCoord,yCoord)
                         nextState = BoardState(self.board)
                         if nextState.move(start,end):
-                            child = TreeNode(nextState, nextCards, !self.turn, [start,end,i], self.depth-1)
+                            child = TreeNode(nextState, nextCards, not self.turn, [start,end,i], self.depth-1)
                             children.append(child)
             if self.turn:
                 max = children[0].score

@@ -14,14 +14,15 @@
 def parse_moves(filename):
     results = []
     with open(filename,'r') as fin:
-        line = fin.readline().strip()
-        line = line.split(';')
-        name = line[0]
-        moves = []
-        for i in range(1,len(name)):
-            moves.append(map(lambda x: int(x),line[i].split(',')))
-        moves = map(lambda x: (x[0],x[1]), moves)
-        results.append(Move(name,moves))
+        for count, line in enumerate(fin):
+            line = line.strip()
+            line = line.split(';')
+            name = line[0]
+            moves = []
+            for i in range(1,len(line)):
+                moves.append(map(lambda x: int(x),line[i].split(',')))
+            moves = map(lambda x: (x[0],x[1]), moves)
+            results.append(Move(name,moves))
     return results
 
 class Move:
