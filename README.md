@@ -2,6 +2,6 @@
 An AI for winning the game Onitama
 
 
-###Requirements
+### Requirements
 ========
 <None>
